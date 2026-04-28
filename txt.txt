@@ -1,172 +1,172 @@
--- Zadanie 1.1
+-- Ćwiczenie 2.1
+-- Dla każdego pracownika wyświetl imię, nazwisko oraz rok jego urodzenia
+SELECT FirstName, LastName, YEAR(BirthDate) AS 'Rok urodzenia'
+FROM employee;
 
-SELECT * FROM Company WHERE Name LIKE 'P%';
+-- Ćwiczenie 2.2
+-- Dla każdego pracownika wyświetl imię, nazwisko oraz rok, miesiąc i dzień jego urodzenia 
+-- oraz dzień tygodnia, w jakim się urodził
+SELECT 
+    FirstName, 
+    LastName, 
+    YEAR(BirthDate) AS 'Rok urodzenia',
+    MONTH(BirthDate) AS 'Miesiąc',
+    DAY(BirthDate) AS 'Dzień',
+    DAYNAME(BirthDate) AS 'Dzień tygodnia'
+FROM employee;
 
+-- Ćwiczenie 2.3
+-- Wyświetl wszystkich pracowników urodzonych w 1990 roku
+SELECT * 
+FROM employee 
+WHERE YEAR(BirthDate) = 1990;
 
--- Zadanie 1.2
+-- Ćwiczenie 2.4
+-- Wyświetl wszystkich pracowników urodzonych w maju 1990 roku
+SELECT * 
+FROM employee 
+WHERE YEAR(BirthDate) = 1990 AND MONTH(BirthDate) = 5;
 
-SELECT * FROM Company WHERE CityId = 1 AND PostCode LIKE '5%';
+-- Ćwiczenie 2.5
+-- Wyświetl bieżącą datę i godzinę
+SELECT NOW() AS 'Teraz';
 
+-- Ćwiczenie 2.6
+-- Wyświetl, ile lat minęło od daty 1 stycznia 1990 roku
+SELECT TIMESTAMPDIFF(YEAR, '1990-01-01', NOW()) AS 'IleLat';
 
--- Zadanie 1.3
+-- Ćwiczenie 2.7
+-- Dla każdego pracownika wyświetl jego imię, nazwisko oraz wiek
+SELECT 
+    FirstName, 
+    LastName, 
+    TIMESTAMPDIFF(YEAR, BirthDate, NOW()) AS 'Wiek'
+FROM employee;
 
--- Sposób 1
-SELECT * FROM Company WHERE YEAR(StartDate) = 2000;
--- Sposób 2
-SELECT * FROM Company WHERE StartDate BETWEEN '2000-01-01' AND '2000-12-31';
+-- Ćwiczenie 2.8
+-- Wyświetl wszystkich pracowników, którzy mają więcej niż 25 lat
+SELECT * 
+FROM employee 
+WHERE TIMESTAMPDIFF(YEAR, BirthDate, NOW()) > 25;
 
+-- Ćwiczenie 2.9
+-- Wyświetl dane wszystkich pracowników, którzy mają mniej niż 30 lat i zarabiają mniej niż 2000 zł
+SELECT * 
+FROM employee 
+WHERE TIMESTAMPDIFF(YEAR, BirthDate, NOW()) < 30 AND Salary < 2000;
 
--- Zadanie 1.4
-
-SELECT Name, AnnualIncome, AnnualIncome / 12 AS 'Przychód miesięczny' 
-FROM Company 
-WHERE Active = 1 AND EmployeeCount > 1000;
-
-
--- Zadanie 1.5
-
-SELECT Name, AnnualIncome / 12 AS 'Przychód miesięczny' 
-FROM Company 
-ORDER BY AnnualIncome / 12 DESC 
-LIMIT 3;
-
-
--- Zadanie 1.6
-
-SELECT * FROM Company WHERE (AnnualIncome / 12) > 10000;
-
-
--- Zadanie 1.7
-
--- Sposób 1
-SELECT Name, PostCode, CONCAT(Street, ' ', Number) AS Adres 
-FROM Company 
-WHERE PostCode IN ('54-621', '78-695', '63-896');
--- Sposób 2
-SELECT Name, PostCode, CONCAT(Street, ' ', Number) AS Adres 
-FROM Company 
-WHERE PostCode = '54-621' OR PostCode = '78-695' OR PostCode = '63-896';
-
-
--- Zadanie 1.8
-
-SELECT Name, CONCAT(IFNULL(Street, 'ulica nieznana'), ' ', Number) AS Adres 
-FROM Company;
-
-
--- Zadanie 1.9
-
--- Sposób 1
-SELECT * FROM Company WHERE CityId NOT IN (1, 3, 5);
--- Sposób 2
-SELECT * FROM Company WHERE CityId != 1 AND CityId != 3 AND CityId != 5;
-
-
--- Zadanie 1.10
-
-SELECT * FROM Company WHERE Active = 1 AND StartDate IS NULL;
-
-
--- Zadanie 1.11
-
-SELECT * FROM Company 
-WHERE (Name LIKE 'C%' OR Name LIKE 'P%' OR Name LIKE 'T%') 
-AND (Name LIKE '%o' OR Name LIKE '%r');
-
-
--- Zadanie 1.12
-
-SELECT * FROM Company WHERE Name LIKE '_o%' AND Name NOT LIKE '%e';
-
-
--- Zadanie 1.13
-
-SELECT * FROM Company 
-WHERE StartDate IS NOT NULL 
-ORDER BY StartDate ASC 
-LIMIT 3;
-
-
--- Zadanie 1.14
-
-SELECT Name, EmployeeCount, (1000 - EmployeeCount) AS 'Liczba pracowników brakująca do 1000' 
-FROM Company 
-WHERE Active = 1 AND EmployeeCount < 1000;
-
-
--- Zadanie 1.15
-
-SELECT Name, ROUND(AnnualIncome / EmployeeCount, 0) AS 'Roczny przychód na pracownika' 
-FROM Company 
+-- Ćwiczenie 2.10
+-- Dla każdego aktywnego pracownika wyświetl imię, nazwisko oraz informację, ile lat już pracuje w tej firmie
+SELECT 
+    FirstName, 
+    LastName, 
+    TIMESTAMPDIFF(YEAR, HireDate, NOW()) AS 'LiczbąLat'
+FROM employee 
 WHERE Active = 1;
 
+-- Ćwiczenie 2.11
+-- Dla każdego aktywnego pracownika wyświetl imię, nazwisko oraz informację, ile miesięcy już pracuje w tej firmie
+SELECT 
+    FirstName, 
+    LastName, 
+    TIMESTAMPDIFF(MONTH, HireDate, NOW()) AS 'LiczbąMiesięcy'
+FROM employee 
+WHERE Active = 1;
 
--- Zadanie 1.16
+-- Ćwiczenie 2.12
+-- Wyświetl dane wszystkich pracowników, którzy przepracowali w tej firmie co najmniej 10 miesięcy, 
+-- ale nie więcej niż 20
+SELECT * 
+FROM employee 
+WHERE TIMESTAMPDIFF(MONTH, HireDate, NOW()) >= 10 
+  AND TIMESTAMPDIFF(MONTH, HireDate, NOW()) <= 20;
 
-SELECT Name FROM Company 
-WHERE Active = 1 AND (AnnualIncome / EmployeeCount) > 300;
+-- Ćwiczenie 2.13
+-- Dla każdego pracownika wyświetl imię, nazwisko, rok urodzenia, rok, w którym został zatrudniony, 
+-- oraz liczbę lat, którą miał w momencie zatrudnienia
+SELECT 
+    FirstName AS 'Imię', 
+    LastName AS 'Nazwisko', 
+    YEAR(BirthDate) AS 'Rok urodzenia',
+    YEAR(HireDate) AS 'Rok zatrudnienia',
+    TIMESTAMPDIFF(YEAR, BirthDate, HireDate) AS 'Wiek w momencie zatrudnienia'
+FROM employee;
 
+-- Ćwiczenie 2.14
+-- Sprawdź, czy istnieją pracownicy, którzy przez pomyłkę mają wpisaną datę zatrudnienia 
+-- późniejszą niż datę zwolnienia
+SELECT * 
+FROM employee 
+WHERE HireDate > RelieveDate;
 
--- Zadanie 1.17
+-- Ćwiczenie 2.15
+-- Dla każdego byłego pracownika, który nie pracuje już w firmie, wyświetl imię i nazwisko 
+-- oraz liczbę miesięcy, którą przepracował w firmie
+SELECT 
+    FirstName AS 'Imię', 
+    LastName AS 'Nazwisko', 
+    TIMESTAMPDIFF(MONTH, HireDate, RelieveDate) AS 'Liczba przepracowanych miesięcy'
+FROM employee 
+WHERE Active = 0 AND RelieveDate IS NOT NULL;
 
-SELECT * FROM Company 
-ORDER BY (AnnualIncome / EmployeeCount) DESC 
-LIMIT 1;
+-- Ćwiczenie 2.16
+-- Dla każdego pracownika wyświetl imię, nazwisko oraz inicjały
+SELECT 
+    FirstName AS 'Imię', 
+    LastName AS 'Nazwisko', 
+    LEFT(FirstName, 1) AS 'Pierwsza litera imienia',
+    LEFT(LastName, 1) AS 'Pierwsza litera nazwiska'
+FROM employee;
 
+-- Ćwiczenie 2.17
+-- Dla każdego pracownika wyświetl nazwisko oraz liczbę liter w nazwisku
+SELECT 
+    LastName AS 'Nazwisko', 
+    LENGTH(LastName) AS 'Liczba liter w nazwisku'
+FROM employee;
 
--- Zadanie 1.18
+-- Ćwiczenie 2.18
+-- Wyświetl wszystkich pracowników, których nazwisko jest dłuższe niż 6 liter
+SELECT * 
+FROM employee 
+WHERE LENGTH(LastName) > 6;
 
-SELECT * FROM Company 
-WHERE Active = 1 
-AND CityId IN (1, 2) 
-AND (EmployeeCount < 500 OR EmployeeCount > 1500);
+-- Ćwiczenie 2.19
+-- Dla każdego pracownika wyświetl jego imię, ale pisane małymi literami, oraz nazwisko pisane wielkimi literami
+SELECT 
+    LOWER(FirstName) AS 'Imię', 
+    UPPER(LastName) AS 'Nazwisko'
+FROM employee;
 
+-- Ćwiczenie 2.20
+-- Dla każdego pracownika wyświetl jego login. Login jest zbudowany z pierwszej litery imienia i całego nazwiska
+SELECT 
+    CONCAT(LEFT(FirstName, 1), LastName) AS 'Login'
+FROM employee;
 
--- Zadanie 1.19
+-- Ćwiczenie 2.21
+-- Dla każdego aktywnego pracownika wyświetl jego login napisany małymi literami. 
+-- Login, jak poprzednio, jest zbudowany z pierwszej litery imienia i całego nazwiska
+SELECT 
+    LOWER(CONCAT(LEFT(FirstName, 1), LastName)) AS 'Login'
+FROM employee 
+WHERE Active = 1;
 
--- Sposób 1
-SELECT * FROM Company WHERE PostCode NOT LIKE '__-___';
--- Sposób 2
-SELECT * FROM Company WHERE PostCode NOT REGEXP '^[0-9]{2}-[0-9]{3}$';
+-- Ćwiczenie 2.22
+-- Dla każdego pracownika wyświetl krótki login, który jest zbudowany z pierwszej litery imienia 
+-- oraz pięciu pierwszych liter nazwiska. Login ten wyświetl przy użyciu wielkich liter. 
+-- Przykładowo, dla pracownika John Williams krótki login to JWILLI
+SELECT 
+    UPPER(CONCAT(LEFT(FirstName, 1), LEFT(LastName, 5))) AS 'Krótki login'
+FROM employee;
 
-
--- Zadanie 1.20
-
-SELECT * FROM Company ORDER BY EmployeeCount DESC LIMIT 2;
-
-
--- Zadanie 1.21
-
-SELECT DISTINCT Street FROM Company;
-
-
--- Zadanie 1.22
-
-SELECT Name, CityId, AnnualIncome, EmployeeCount 
-FROM Company 
-WHERE CityId IS NOT NULL 
-ORDER BY CityId ASC, AnnualIncome DESC, EmployeeCount DESC;
-
-
--- Zadanie 1.23
-
--- Sposób 1
-SELECT * FROM Company WHERE StartDate IS NULL OR StartDate >= '2000-01-01';
--- Sposób 2
-SELECT * FROM Company WHERE COALESCE(StartDate, '2026-01-01') >= '2000-01-01';
-
-
--- Zadanie 1.24
-
--- Sposób 1
-SELECT * FROM Company WHERE EmployeeCount BETWEEN 1000 AND 1500;
--- Sposób 2
-SELECT * FROM Company WHERE EmployeeCount >= 1000 AND EmployeeCount <= 1500;
-
-
--- Zadanie 1.25
-
--- Sposób 1
-SELECT * FROM Company WHERE Active = 1 AND Name NOT IN ('Casio', 'Yamaha');
--- Sposób 2
-SELECT * FROM Company WHERE Active = 1 AND Name != 'Casio' AND Name != 'Yamaha';
+-- Ćwiczenie 2.23
+-- Wyświetl imię, nazwisko oraz wiek wszystkich pracowników. Posortuj ich dane według wieku, 
+-- a jeśli istnieje wielu pracowników w tym samym wieku, posortuj ich według nazwiska. 
+-- Jeśli istnieje wielu pracowników w tym samym wieku i o tym samym nazwisku, posortuj ich według imienia
+SELECT 
+    FirstName AS 'Imię', 
+    LastName AS 'Nazwisko', 
+    TIMESTAMPDIFF(YEAR, BirthDate, NOW()) AS 'Data urodzenia'
+FROM employee 
+ORDER BY TIMESTAMPDIFF(YEAR, BirthDate, NOW()), LastName, FirstName;
