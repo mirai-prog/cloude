@@ -1,5 +1,5 @@
 #1. 
-'''
+```sql
 -- Tworzymy bazy
 CREATE DATABASE IF NOT EXISTS hurtownia;
 CREATE DATABASE IF NOT EXISTS firma;
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS pracownicy (
     imie VARCHAR(50),
     nazwisko VARCHAR(50)
 );
-'''
+```
 
 #2. 
 ## 1. Tworzenie użytkowników
