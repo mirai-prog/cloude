@@ -1,232 +1,280 @@
--- Zapytanie 1:
-SELECT model FROM produkt;
+=== НАЧАЛО ФАЙЛА: rekord.txt ===
+Zamczysko
+Na odludziu stoi opuszczone zamczysko, w którym znajduje się skarb strzeżony przez złowrogie demony i duchy
+Punkty: 200
+Cena: 50 zł 
+zamczysko.jpg
+=== КОНЕЦ ФАЙЛА: rekord.txt ===
 
--- Zapytanie 2:
-SELECT buty.model, buty.nazwa, buty.cena, produkt.nazwa_pliku
-FROM buty
-JOIN produkt ON buty.model = produkt.model;
+======================================================================
 
--- Zapytanie 3:
-SELECT buty.nazwa, buty.cena, produkt.kolor, produkt.kod_produktu, produkt.material, produkt.nazwa_pliku
-FROM buty
-JOIN produkt ON buty.model = produkt.model
-WHERE buty.model = 'P-59-03';
+=== НАЧАЛО ФАЙЛА: kwerendy.txt ===
+Zapytanie 1:
+SELECT id, nazwa, zdjecie FROM gry;
 
--- Zapytanie 4:
-INSERT INTO kategorie (nazwa_kat) VALUES ('Sandały');
-```[span_3](start_span)[span_3](end_span)
+Zapytanie 2:
+SELECT nazwa, LEFT(opis, 100), punkty, cena FROM gry WHERE id = 1;
 
----
+Zapytanie 3:
+SELECT nazwa, punkty FROM gry ORDER BY punkty DESC LIMIT 5;
 
-### 2. `style.css`
-Запишите в файл стили оформления[span_4](start_span)[span_4](end_span):
+Zapytanie 4:
+INSERT INTO gry (nazwa, opis, punkty, cena, zdjecie) VALUES ('Zamczysko', 'Na odludziu stoi opuszczone zamczysko, w którym znajduje się skarb strzeżony przez złowrogie demony i duchy', 200, 50, 'zamczysko.jpg');
+=== КОНЕЦ ФАЙЛА: kwerendy.txt ===
 
-```css
+======================================================================
+
+=== НАЧАЛО ФАЙЛА: styl.css ===
 * {
-    font-family: Cambria, serif;
+    font-family: Garamond;
+    color: white;
 }
 
-header, footer {
-    background-color: Sienna;
-    color: white;
-    padding: 5px;
+header {
+    background-color: Indigo;
     text-align: center;
+    padding: 2px;
 }
 
-main {
-    background-color: AntiqueWhite;
-    height: 700px;
-    font-size: 120%;
-    overflow: auto;
+#lewy, #prawy {
+    background-color: Indigo;
+    height: 600px;
 }
 
-.kontrolki {
-    width: 150px;
-    margin: 10px;
+#srodkowy {
+    background-color: black;
+    height: 600px;
+    overflow: scroll;
 }
 
-.buty {
-    width: 70%;
-    margin: 15px;
-    padding: 7px;
-    border: 1px solid Sienna;
-    border-radius: 30px;
+@media (min-width: 801px) {
+    #lewy, #prawy {
+        width: 20%;
+        float: left;
+    }
+    #srodkowy {
+        width: 60%;
+        float: left;
+    }
 }
 
-.buty:hover {
-    background-color: Linen;
+footer {
+    background-color: Indigo;
+    height: 150px;
+    clear: both;
 }
 
-img {
+.punkty {
+    background-color: Tomato;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+li {
+    padding: 5px;
+}
+
+.gra {
     float: left;
-    margin-right: 30px;
+    text-align: center;
+    padding: 3px;
 }
 
-h4 {
-    background-color: Sienna;
-    color: white;
-    text-align: right;
+input {
+    margin: 10px;
+    color: Indigo;
 }
-```[span_5](start_span)[span_5](end_span)
+=== КОНЕЦ ФАЙЛА: styl.css ===
 
----
+======================================================================
 
-### 3. `index.php`
-Запишите в файл код главной страницы (замените `00000000000` в подвале на ваш номер сдающего)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span):
-
-```php
+=== НАЧАЛО ФАЙЛА: gry.php ===
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obuwie</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Gry komputerowe</title>
+    <link rel="stylesheet" href="styl.css">
 </head>
 <body>
     <?php
-    $polaczenie = mysqli_connect("localhost", "root", "", "obuwie");
-    if (!$polaczenie) {
-        die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+    $polaczenie = mysqli_connect("localhost", "root", "", "gry");
+
+    // Skrypt 4
+    if (!empty($_POST['nazwa'])) {
+        $nazwa = $_POST['nazwa'];
+        $opis = $_POST['opis'];
+        $cena = $_POST['cena'];
+        $zdjecie = $_POST['zdjecie'];
+        $zapytanie4 = "INSERT INTO gry (nazwa, opis, punkty, cena, zdjecie) VALUES ('$nazwa', '$opis', 0, '$cena', '$zdjecie');";
+        mysqli_query($polaczenie, $zapytanie4);
     }
-    mysqli_set_charset($polaczenie, "utf8");
     ?>
 
     <header>
-        <h1>Obuwie męskie</h1>
+        <h1>Ranking gier komputerowych</h1>
     </header>
 
-    <main>
-        <form action="zamow.php" method="post">
-            <label for="model">Model: </label>
-            <select name="model" id="model" class="kontrolki">
-                <?php
-                // Skrypt 1
-                $kw1 = "SELECT model FROM produkt;";
-                $wynik1 = mysqli_query($polaczenie, $kw1);
-                while ($wiersz1 = mysqli_fetch_array($wynik1)) {
-                    $model = htmlspecialchars($wiersz1['model'], ENT_QUOTES, 'UTF-8');
-                    echo "<option value=\"{$model}\">{$model}</option>";
-                }
-                ?>
-            </select>
+    <aside id="lewy">
+        <h3>Top 5 gier w tym miesiącu</h3>
+        <ul>
+            <?php
+            // Skrypt 1
+            $zapytanie3 = "SELECT nazwa, punkty FROM gry ORDER BY punkty DESC LIMIT 5;";
+            $wynik1 = mysqli_query($polaczenie, $zapytanie3);
+            while ($wiersz1 = mysqli_fetch_array($wynik1)) {
+                echo "<li>" . $wiersz1['nazwa'] . " <span class='punkty'>" . $wiersz1['punkty'] . "</span></li>";
+            }
+            ?>
+        </ul>
+        <h3>Nasz sklep</h3>
+        <a href="http://sklep.gry.pl">Tu kupisz gry</a>
+        <h3>Stronę wykonał</h3>
+        <p>00000000000</p>
+    </aside>
 
-            <label for="rozmiar">Rozmiar: </label>
-            <select name="rozmiar" id="rozmiar" class="kontrolki">
-                <option value="40">40</option>
-                <option value="41">41</option>
-                <option value="42">42</option>
-                <option value="43">43</option>
-            </select>
-
-            <label for="liczba_par">Liczba par: </label>
-            <input type="number" name="liczba_par" id="liczba_par" class="kontrolki" min="1">
-
-            <button type="submit" class="kontrolki">Zamów</button>
-        </form>
-
+    <main id="srodkowy">
         <?php
         // Skrypt 2
-        $kw2 = "SELECT buty.model, buty.nazwa, buty.cena, produkt.nazwa_pliku FROM buty JOIN produkt ON buty.model = produkt.model;";
-        $wynik2 = mysqli_query($polaczenie, $kw2);
+        $zapytanie1 = "SELECT id, nazwa, zdjecie FROM gry;";
+        $wynik2 = mysqli_query($polaczenie, $zapytanie1);
         while ($wiersz2 = mysqli_fetch_array($wynik2)) {
-            $plik = htmlspecialchars($wiersz2['nazwa_pliku'], ENT_QUOTES, 'UTF-8');
-            $nazwa = htmlspecialchars($wiersz2['nazwa'], ENT_QUOTES, 'UTF-8');
-            $modelButa = htmlspecialchars($wiersz2['model'], ENT_QUOTES, 'UTF-8');
-            $cena = htmlspecialchars($wiersz2['cena'], ENT_QUOTES, 'UTF-8');
-
-            echo "<div class=\"buty\">";
-            echo "<img src=\"{$plik}\" alt=\"but męski\">";
-            echo "<h2>{$nazwa}</h2>";
-            echo "<h5>Model: {$modelButa}</h5>";
-            echo "<h4>Cena: {$cena}</h4>";
+            echo "<div class='gra'>";
+            echo "<img src='" . $wiersz2['zdjecie'] . "' alt='" . $wiersz2['nazwa'] . "' title='" . $wiersz2['id'] . "'>";
+            echo "<p>" . $wiersz2['nazwa'] . "</p>";
             echo "</div>";
         }
-
-        mysqli_close($polaczenie);
         ?>
     </main>
 
+    <aside id="prawy">
+        <h3>Dodaj nową grę</h3>
+        <form method="post" action="gry.php">
+            <label for="nazwa">nazwa</label><br>
+            <input type="text" name="nazwa" id="nazwa"><br>
+            <label for="opis">opis</label><br>
+            <input type="text" name="opis" id="opis"><br>
+            <label for="cena">cena</label><br>
+            <input type="text" name="cena" id="cena"><br>
+            <label for="zdjecie">zdjęcie</label><br>
+            <input type="text" name="zdjecie" id="zdjecie"><br>
+            <input type="submit" value="DODAJ">
+        </form>
+    </aside>
+
     <footer>
-        <p>Autor strony: 00000000000</p>
-    </footer>
-</body>
-</html>
-```[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)
-
----
-
-### 4. `zamow.php`
-Запишите в файл код страницы заказа (также замените `00000000000` в подвале на ваш номер сдающего)[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span):
-
-```php
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obuwie</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Obuwie męskie</h1>
-    </header>
-
-    <main>
-        <h2>Zamówienie</h2>
-
+        <form method="post" action="gry.php">
+            <input type="text" name="id">
+            <input type="submit" value="Pokaż opis">
+        </form>
         <?php
         // Skrypt 3
-        $polaczenie = mysqli_connect("localhost", "root", "", "obuwie");
-        if (!$polaczenie) {
-            die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
-        }
-        mysqli_set_charset($polaczenie, "utf8");
-
-        $model = isset($_POST['model']) ? mysqli_real_escape_string($polaczenie, $_POST['model']) : '';
-        $rozmiar = isset($_POST['rozmiar']) ? htmlspecialchars($_POST['rozmiar'], ENT_QUOTES, 'UTF-8') : '';
-        $liczbaPar = isset($_POST['liczba_par']) ? (int)$_POST['liczba_par'] : 0;
-
-        if ($model !== '') {
-            $kw3 = "SELECT buty.nazwa, buty.cena, produkt.kolor, produkt.kod_produktu, produkt.material, produkt.nazwa_pliku
-                    FROM buty
-                    JOIN produkt ON buty.model = produkt.model
-                    WHERE buty.model = '{$model}';";
-            $wynik3 = mysqli_query($polaczenie, $kw3);
-
+        if (!empty($_POST['id'])) {
+            $id = $_POST['id'];
+            $zapytanie2 = "SELECT nazwa, LEFT(opis, 100) AS krotki_opis, punkty, cena FROM gry WHERE id = $id;";
+            $wynik3 = mysqli_query($polaczenie, $zapytanie2);
             if ($wiersz3 = mysqli_fetch_array($wynik3)) {
-                $plik = htmlspecialchars($wiersz3['nazwa_pliku'], ENT_QUOTES, 'UTF-8');
-                $nazwa = htmlspecialchars($wiersz3['nazwa'], ENT_QUOTES, 'UTF-8');
-                $cena = (float)$wiersz3['cena'];
-                $kolor = htmlspecialchars($wiersz3['kolor'], ENT_QUOTES, 'UTF-8');
-                $material = htmlspecialchars($wiersz3['material'], ENT_QUOTES, 'UTF-8');
-                $wartoscCalkowita = $cena * $liczbaPar;
-
-                echo "<img src=\"{$plik}\" alt=\"but męski\">";
-                echo "<h2>{$nazwa}</h2>";
-                echo "<p>cena za {$liczbaPar} par: {$wartoscCalkowita} zł</p>";
-                echo "<p>Szczegóły produktu: {$kolor}, {$material}</p>";
-                echo "<p>Rozmiar: {$rozmiar}</p>";
+                echo "<h2>" . $wiersz3['nazwa'] . ", " . $wiersz3['punkty'] . " punktów, " . $wiersz3['cena'] . " zł</h2>";
+                echo "<p>" . $wiersz3['krotki_opis'] . "</p>";
             }
         }
 
         mysqli_close($polaczenie);
         ?>
-
-        <a href="index.php">Strona główna</a>
-    </main>
-
-    <footer>
-        <p>Autor strony: 00000000000</p>
     </footer>
 </body>
 </html>
-```[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)
+=== КОНЕЦ ФАЙЛА: gry.php ===
 
----
+======================================================================
 
-### 5. `przeglądarka.txt`
-Запишите в этот файл только название браузера, в котором вы проверяли работу сайта[span_22](start_span)[span_22](end_span), например:
-```text
+=== НАЧАЛО ФАЙЛА: przeglądarka.txt ===
 Google Chrome
+=== КОНЕЦ ФАЙЛА: przeglądarka.txt ===
+
+======================================================================
+
+=== НАЧАЛО ФАЙЛА: baza.sql ===
+-- phpMyAdmin SQL Dump
+-- version 5.1.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Czas generowania: 24 Sty 2022, 11:38
+-- Wersja serwera: 10.4.21-MariaDB
+-- Wersja PHP: 8.0.10
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Baza danych: `gry`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `gry`
+--
+
+CREATE TABLE `gry` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nazwa` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `opis` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `punkty` int(10) UNSIGNED DEFAULT NULL,
+  `cena` float DEFAULT NULL,
+  `zdjecie` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Zrzut danych tabeli `gry`
+--
+
+INSERT INTO `gry` (`id`, `nazwa`, `opis`, `punkty`, `cena`, `zdjecie`) VALUES
+(1, 'Czarodziejka', 'Rozgrywająca się w otwartym świecie przygoda. Jesteś czarodziejką Vestą i musisz zdobyć jedyny w swoim rodzaju diament, który pozwoli zrównoważyć siły w otaczającym Cię świecie', 45, 100, 'Czarodziejka.jpg'),
+(2, 'Kalipso', 'Kroniki Kalipso opowiadają historię wyspy IO, na której od niepamiętnych czasów ścierają się ze sobą dwa gatunki pradawnego świata: Eloje i Morloki. Jesteś rycerzem, który szuka pradawnej kroniki zawierającej przepis na utrzymanie pokoju na wyspie\r\n', 125, 76, 'kalipso.jpg'),
+(3, 'Katedra', 'W opuszczonej katedrze aniołowie i demony walczą o dusze ludzi na ziemi', 56, 50, 'katedra.jpg'),
+(4, 'Krokodyl', 'Rzeka zapomnienia kryje niebezpieczeństwa, które czekają na śmiałków przeprawiających się w poszukiwaniu nowych terenów na obozowiska', 34, 33, 'krokodyl.jpg'),
+(5, 'Księżniczka Persji', 'Wojownicza księżniczka Persji musi uniknąć konfliktów zbrojnych zagrażających jej podwładnym', 293, 100, 'Persja.jpg'),
+(6, 'Mag', 'W pradawnym świecie magowie władają państwami. Ci potężni czarodzieje nie znają litości dla swoich ludów, aż ... W odległej krainie rodzi się dziecko, które nie tylko zdradza umiejętności czarowania, ale też wkrótce zbuntuje się przeciwko hegemoni Magów i samo doprowadzi do zjednoczenia narodów i pokoju w pradawnym Świecie. Wpierw jednak musi stoczyć wojnę z Magami', 357, 150, 'Mag.jpg'),
+(7, 'Nieznany Ląd', 'Prosta gra przygodowa dla najmłodszych, którzy mogą się wcielić w niepokonanego kapitana Prixa podróżującego przez kosmos w poszukiwaniu nieznanego lądu', 96, 50, 'NieznanyLad.jpg'),
+(8, 'Wyprawa Na Księżyc', 'Misja Apollo musi tym razem wykonać lot na księżyc aby zmierzyć się z obcymi, którzy opanowali srebrny glob i planują inwazję na ziemię', 103, 79, 'WyprawaNaKsiezyc.jpg');
+
+--
+-- Indeksy dla zrzutów tabel
+--
+
+--
+-- Indeksy dla tabeli `gry`
+--
+ALTER TABLE `gry`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT dla zrzuconych tabel
+--
+
+--
+-- AUTO_INCREMENT dla tabeli `gry`
+--
+ALTER TABLE `gry`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+=== КОНЕЦ ФАЙЛА: baza.sql ===
+
+======================================================================
+
+=== НАЧАЛО ФАЙЛА: zamczysko.jpg ===
+[Бинарный файл изображения: zamczysko.jpg, масштабирован пропорционально до ширины 550 px -> 550x309 px]
+=== КОНЕЦ ФАЙЛА: zamczysko.jpg ===
