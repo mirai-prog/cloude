@@ -1,172 +1,232 @@
--- Ćwiczenie 2.1
--- Dla każdego pracownika wyświetl imię, nazwisko oraz rok jego urodzenia
-SELECT FirstName, LastName, YEAR(BirthDate) AS 'Rok urodzenia'
-FROM employee;
+-- Zapytanie 1:
+SELECT model FROM produkt;
 
--- Ćwiczenie 2.2
--- Dla każdego pracownika wyświetl imię, nazwisko oraz rok, miesiąc i dzień jego urodzenia 
--- oraz dzień tygodnia, w jakim się urodził
-SELECT 
-    FirstName, 
-    LastName, 
-    YEAR(BirthDate) AS 'Rok urodzenia',
-    MONTH(BirthDate) AS 'Miesiąc',
-    DAY(BirthDate) AS 'Dzień',
-    DAYNAME(BirthDate) AS 'Dzień tygodnia'
-FROM employee;
+-- Zapytanie 2:
+SELECT buty.model, buty.nazwa, buty.cena, produkt.nazwa_pliku
+FROM buty
+JOIN produkt ON buty.model = produkt.model;
 
--- Ćwiczenie 2.3
--- Wyświetl wszystkich pracowników urodzonych w 1990 roku
-SELECT * 
-FROM employee 
-WHERE YEAR(BirthDate) = 1990;
+-- Zapytanie 3:
+SELECT buty.nazwa, buty.cena, produkt.kolor, produkt.kod_produktu, produkt.material, produkt.nazwa_pliku
+FROM buty
+JOIN produkt ON buty.model = produkt.model
+WHERE buty.model = 'P-59-03';
 
--- Ćwiczenie 2.4
--- Wyświetl wszystkich pracowników urodzonych w maju 1990 roku
-SELECT * 
-FROM employee 
-WHERE YEAR(BirthDate) = 1990 AND MONTH(BirthDate) = 5;
+-- Zapytanie 4:
+INSERT INTO kategorie (nazwa_kat) VALUES ('Sandały');
+```[span_3](start_span)[span_3](end_span)
 
--- Ćwiczenie 2.5
--- Wyświetl bieżącą datę i godzinę
-SELECT NOW() AS 'Teraz';
+---
 
--- Ćwiczenie 2.6
--- Wyświetl, ile lat minęło od daty 1 stycznia 1990 roku
-SELECT TIMESTAMPDIFF(YEAR, '1990-01-01', NOW()) AS 'IleLat';
+### 2. `style.css`
+Запишите в файл стили оформления[span_4](start_span)[span_4](end_span):
 
--- Ćwiczenie 2.7
--- Dla każdego pracownika wyświetl jego imię, nazwisko oraz wiek
-SELECT 
-    FirstName, 
-    LastName, 
-    TIMESTAMPDIFF(YEAR, BirthDate, NOW()) AS 'Wiek'
-FROM employee;
+```css
+* {
+    font-family: Cambria, serif;
+}
 
--- Ćwiczenie 2.8
--- Wyświetl wszystkich pracowników, którzy mają więcej niż 25 lat
-SELECT * 
-FROM employee 
-WHERE TIMESTAMPDIFF(YEAR, BirthDate, NOW()) > 25;
+header, footer {
+    background-color: Sienna;
+    color: white;
+    padding: 5px;
+    text-align: center;
+}
 
--- Ćwiczenie 2.9
--- Wyświetl dane wszystkich pracowników, którzy mają mniej niż 30 lat i zarabiają mniej niż 2000 zł
-SELECT * 
-FROM employee 
-WHERE TIMESTAMPDIFF(YEAR, BirthDate, NOW()) < 30 AND Salary < 2000;
+main {
+    background-color: AntiqueWhite;
+    height: 700px;
+    font-size: 120%;
+    overflow: auto;
+}
 
--- Ćwiczenie 2.10
--- Dla każdego aktywnego pracownika wyświetl imię, nazwisko oraz informację, ile lat już pracuje w tej firmie
-SELECT 
-    FirstName, 
-    LastName, 
-    TIMESTAMPDIFF(YEAR, HireDate, NOW()) AS 'LiczbąLat'
-FROM employee 
-WHERE Active = 1;
+.kontrolki {
+    width: 150px;
+    margin: 10px;
+}
 
--- Ćwiczenie 2.11
--- Dla każdego aktywnego pracownika wyświetl imię, nazwisko oraz informację, ile miesięcy już pracuje w tej firmie
-SELECT 
-    FirstName, 
-    LastName, 
-    TIMESTAMPDIFF(MONTH, HireDate, NOW()) AS 'LiczbąMiesięcy'
-FROM employee 
-WHERE Active = 1;
+.buty {
+    width: 70%;
+    margin: 15px;
+    padding: 7px;
+    border: 1px solid Sienna;
+    border-radius: 30px;
+}
 
--- Ćwiczenie 2.12
--- Wyświetl dane wszystkich pracowników, którzy przepracowali w tej firmie co najmniej 10 miesięcy, 
--- ale nie więcej niż 20
-SELECT * 
-FROM employee 
-WHERE TIMESTAMPDIFF(MONTH, HireDate, NOW()) >= 10 
-  AND TIMESTAMPDIFF(MONTH, HireDate, NOW()) <= 20;
+.buty:hover {
+    background-color: Linen;
+}
 
--- Ćwiczenie 2.13
--- Dla każdego pracownika wyświetl imię, nazwisko, rok urodzenia, rok, w którym został zatrudniony, 
--- oraz liczbę lat, którą miał w momencie zatrudnienia
-SELECT 
-    FirstName AS 'Imię', 
-    LastName AS 'Nazwisko', 
-    YEAR(BirthDate) AS 'Rok urodzenia',
-    YEAR(HireDate) AS 'Rok zatrudnienia',
-    TIMESTAMPDIFF(YEAR, BirthDate, HireDate) AS 'Wiek w momencie zatrudnienia'
-FROM employee;
+img {
+    float: left;
+    margin-right: 30px;
+}
 
--- Ćwiczenie 2.14
--- Sprawdź, czy istnieją pracownicy, którzy przez pomyłkę mają wpisaną datę zatrudnienia 
--- późniejszą niż datę zwolnienia
-SELECT * 
-FROM employee 
-WHERE HireDate > RelieveDate;
+h4 {
+    background-color: Sienna;
+    color: white;
+    text-align: right;
+}
+```[span_5](start_span)[span_5](end_span)
 
--- Ćwiczenie 2.15
--- Dla każdego byłego pracownika, który nie pracuje już w firmie, wyświetl imię i nazwisko 
--- oraz liczbę miesięcy, którą przepracował w firmie
-SELECT 
-    FirstName AS 'Imię', 
-    LastName AS 'Nazwisko', 
-    TIMESTAMPDIFF(MONTH, HireDate, RelieveDate) AS 'Liczba przepracowanych miesięcy'
-FROM employee 
-WHERE Active = 0 AND RelieveDate IS NOT NULL;
+---
 
--- Ćwiczenie 2.16
--- Dla każdego pracownika wyświetl imię, nazwisko oraz inicjały
-SELECT 
-    FirstName AS 'Imię', 
-    LastName AS 'Nazwisko', 
-    LEFT(FirstName, 1) AS 'Pierwsza litera imienia',
-    LEFT(LastName, 1) AS 'Pierwsza litera nazwiska'
-FROM employee;
+### 3. `index.php`
+Запишите в файл код главной страницы (замените `00000000000` в подвале на ваш номер сдающего)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span):
 
--- Ćwiczenie 2.17
--- Dla każdego pracownika wyświetl nazwisko oraz liczbę liter w nazwisku
-SELECT 
-    LastName AS 'Nazwisko', 
-    LENGTH(LastName) AS 'Liczba liter w nazwisku'
-FROM employee;
+```php
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obuwie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <?php
+    $polaczenie = mysqli_connect("localhost", "root", "", "obuwie");
+    if (!$polaczenie) {
+        die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($polaczenie, "utf8");
+    ?>
 
--- Ćwiczenie 2.18
--- Wyświetl wszystkich pracowników, których nazwisko jest dłuższe niż 6 liter
-SELECT * 
-FROM employee 
-WHERE LENGTH(LastName) > 6;
+    <header>
+        <h1>Obuwie męskie</h1>
+    </header>
 
--- Ćwiczenie 2.19
--- Dla każdego pracownika wyświetl jego imię, ale pisane małymi literami, oraz nazwisko pisane wielkimi literami
-SELECT 
-    LOWER(FirstName) AS 'Imię', 
-    UPPER(LastName) AS 'Nazwisko'
-FROM employee;
+    <main>
+        <form action="zamow.php" method="post">
+            <label for="model">Model: </label>
+            <select name="model" id="model" class="kontrolki">
+                <?php
+                // Skrypt 1
+                $kw1 = "SELECT model FROM produkt;";
+                $wynik1 = mysqli_query($polaczenie, $kw1);
+                while ($wiersz1 = mysqli_fetch_array($wynik1)) {
+                    $model = htmlspecialchars($wiersz1['model'], ENT_QUOTES, 'UTF-8');
+                    echo "<option value=\"{$model}\">{$model}</option>";
+                }
+                ?>
+            </select>
 
--- Ćwiczenie 2.20
--- Dla każdego pracownika wyświetl jego login. Login jest zbudowany z pierwszej litery imienia i całego nazwiska
-SELECT 
-    CONCAT(LEFT(FirstName, 1), LastName) AS 'Login'
-FROM employee;
+            <label for="rozmiar">Rozmiar: </label>
+            <select name="rozmiar" id="rozmiar" class="kontrolki">
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+            </select>
 
--- Ćwiczenie 2.21
--- Dla każdego aktywnego pracownika wyświetl jego login napisany małymi literami. 
--- Login, jak poprzednio, jest zbudowany z pierwszej litery imienia i całego nazwiska
-SELECT 
-    LOWER(CONCAT(LEFT(FirstName, 1), LastName)) AS 'Login'
-FROM employee 
-WHERE Active = 1;
+            <label for="liczba_par">Liczba par: </label>
+            <input type="number" name="liczba_par" id="liczba_par" class="kontrolki" min="1">
 
--- Ćwiczenie 2.22
--- Dla każdego pracownika wyświetl krótki login, który jest zbudowany z pierwszej litery imienia 
--- oraz pięciu pierwszych liter nazwiska. Login ten wyświetl przy użyciu wielkich liter. 
--- Przykładowo, dla pracownika John Williams krótki login to JWILLI
-SELECT 
-    UPPER(CONCAT(LEFT(FirstName, 1), LEFT(LastName, 5))) AS 'Krótki login'
-FROM employee;
+            <button type="submit" class="kontrolki">Zamów</button>
+        </form>
 
--- Ćwiczenie 2.23
--- Wyświetl imię, nazwisko oraz wiek wszystkich pracowników. Posortuj ich dane według wieku, 
--- a jeśli istnieje wielu pracowników w tym samym wieku, posortuj ich według nazwiska. 
--- Jeśli istnieje wielu pracowników w tym samym wieku i o tym samym nazwisku, posortuj ich według imienia
-SELECT 
-    FirstName AS 'Imię', 
-    LastName AS 'Nazwisko', 
-    TIMESTAMPDIFF(YEAR, BirthDate, NOW()) AS 'Data urodzenia'
-FROM employee 
-ORDER BY TIMESTAMPDIFF(YEAR, BirthDate, NOW()), LastName, FirstName;
+        <?php
+        // Skrypt 2
+        $kw2 = "SELECT buty.model, buty.nazwa, buty.cena, produkt.nazwa_pliku FROM buty JOIN produkt ON buty.model = produkt.model;";
+        $wynik2 = mysqli_query($polaczenie, $kw2);
+        while ($wiersz2 = mysqli_fetch_array($wynik2)) {
+            $plik = htmlspecialchars($wiersz2['nazwa_pliku'], ENT_QUOTES, 'UTF-8');
+            $nazwa = htmlspecialchars($wiersz2['nazwa'], ENT_QUOTES, 'UTF-8');
+            $modelButa = htmlspecialchars($wiersz2['model'], ENT_QUOTES, 'UTF-8');
+            $cena = htmlspecialchars($wiersz2['cena'], ENT_QUOTES, 'UTF-8');
+
+            echo "<div class=\"buty\">";
+            echo "<img src=\"{$plik}\" alt=\"but męski\">";
+            echo "<h2>{$nazwa}</h2>";
+            echo "<h5>Model: {$modelButa}</h5>";
+            echo "<h4>Cena: {$cena}</h4>";
+            echo "</div>";
+        }
+
+        mysqli_close($polaczenie);
+        ?>
+    </main>
+
+    <footer>
+        <p>Autor strony: 00000000000</p>
+    </footer>
+</body>
+</html>
+```[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)
+
+---
+
+### 4. `zamow.php`
+Запишите в файл код страницы заказа (также замените `00000000000` в подвале на ваш номер сдающего)[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span):
+
+```php
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obuwie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Obuwie męskie</h1>
+    </header>
+
+    <main>
+        <h2>Zamówienie</h2>
+
+        <?php
+        // Skrypt 3
+        $polaczenie = mysqli_connect("localhost", "root", "", "obuwie");
+        if (!$polaczenie) {
+            die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+        }
+        mysqli_set_charset($polaczenie, "utf8");
+
+        $model = isset($_POST['model']) ? mysqli_real_escape_string($polaczenie, $_POST['model']) : '';
+        $rozmiar = isset($_POST['rozmiar']) ? htmlspecialchars($_POST['rozmiar'], ENT_QUOTES, 'UTF-8') : '';
+        $liczbaPar = isset($_POST['liczba_par']) ? (int)$_POST['liczba_par'] : 0;
+
+        if ($model !== '') {
+            $kw3 = "SELECT buty.nazwa, buty.cena, produkt.kolor, produkt.kod_produktu, produkt.material, produkt.nazwa_pliku
+                    FROM buty
+                    JOIN produkt ON buty.model = produkt.model
+                    WHERE buty.model = '{$model}';";
+            $wynik3 = mysqli_query($polaczenie, $kw3);
+
+            if ($wiersz3 = mysqli_fetch_array($wynik3)) {
+                $plik = htmlspecialchars($wiersz3['nazwa_pliku'], ENT_QUOTES, 'UTF-8');
+                $nazwa = htmlspecialchars($wiersz3['nazwa'], ENT_QUOTES, 'UTF-8');
+                $cena = (float)$wiersz3['cena'];
+                $kolor = htmlspecialchars($wiersz3['kolor'], ENT_QUOTES, 'UTF-8');
+                $material = htmlspecialchars($wiersz3['material'], ENT_QUOTES, 'UTF-8');
+                $wartoscCalkowita = $cena * $liczbaPar;
+
+                echo "<img src=\"{$plik}\" alt=\"but męski\">";
+                echo "<h2>{$nazwa}</h2>";
+                echo "<p>cena za {$liczbaPar} par: {$wartoscCalkowita} zł</p>";
+                echo "<p>Szczegóły produktu: {$kolor}, {$material}</p>";
+                echo "<p>Rozmiar: {$rozmiar}</p>";
+            }
+        }
+
+        mysqli_close($polaczenie);
+        ?>
+
+        <a href="index.php">Strona główna</a>
+    </main>
+
+    <footer>
+        <p>Autor strony: 00000000000</p>
+    </footer>
+</body>
+</html>
+```[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)
+
+---
+
+### 5. `przeglądarka.txt`
+Запишите в этот файл только название браузера, в котором вы проверяли работу сайта[span_22](start_span)[span_22](end_span), например:
+```text
+Google Chrome
