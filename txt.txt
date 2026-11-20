@@ -1,280 +1,90 @@
-=== НАЧАЛО ФАЙЛА: rekord.txt ===
-Zamczysko
-Na odludziu stoi opuszczone zamczysko, w którym znajduje się skarb strzeżony przez złowrogie demony i duchy
-Punkty: 200
-Cena: 50 zł 
-zamczysko.jpg
-=== КОНЕЦ ФАЙЛА: rekord.txt ===
+    // ==============================================
+    // MIEJSCE NA ROZWIĄZANIA UCZNIA
+    // ==============================================
+    // Zadanie 1:
+    const opis = document.getElementById("opis");
+    opis.textContent = "Witamy na lekcji JavaScript!";
+    opis.style.color = "blue";
+    opis.style.fontWeight = "bold";
 
-======================================================================
-
-=== НАЧАЛО ФАЙЛА: kwerendy.txt ===
-Zapytanie 1:
-SELECT id, nazwa, zdjecie FROM gry;
-
-Zapytanie 2:
-SELECT nazwa, LEFT(opis, 100), punkty, cena FROM gry WHERE id = 1;
-
-Zapytanie 3:
-SELECT nazwa, punkty FROM gry ORDER BY punkty DESC LIMIT 5;
-
-Zapytanie 4:
-INSERT INTO gry (nazwa, opis, punkty, cena, zdjecie) VALUES ('Zamczysko', 'Na odludziu stoi opuszczone zamczysko, w którym znajduje się skarb strzeżony przez złowrogie demony i duchy', 200, 50, 'zamczysko.jpg');
-=== КОНЕЦ ФАЙЛА: kwerendy.txt ===
-
-======================================================================
-
-=== НАЧАЛО ФАЙЛА: styl.css ===
-* {
-    font-family: Garamond;
-    color: white;
-}
-
-header {
-    background-color: Indigo;
-    text-align: center;
-    padding: 2px;
-}
-
-#lewy, #prawy {
-    background-color: Indigo;
-    height: 600px;
-}
-
-#srodkowy {
-    background-color: black;
-    height: 600px;
-    overflow: scroll;
-}
-
-@media (min-width: 801px) {
-    #lewy, #prawy {
-        width: 20%;
-        float: left;
+    // Zadanie 2:
+    const naglowkiH3 = document.getElementsByTagName("h3");
+    for (let i = 0; i < naglowkiH3.length; i++) {
+        naglowkiH3[i].style.color = "darkgreen";
+        naglowkiH3[i].style.fontSize = "18px";
     }
-    #srodkowy {
-        width: 60%;
-        float: left;
-    }
-}
 
-footer {
-    background-color: Indigo;
-    height: 150px;
-    clear: both;
-}
+    // Zadanie 3:
+    const sekcje = document.getElementsByClassName("sekcja");
+    sekcje[1].style.backgroundColor = "lightgreen";
+    sekcje[2].style.border = "2px solid orange";
+    sekcje[0].textContent = "Sekcja pierwsza – zmieniona";
 
-.punkty {
-    background-color: Tomato;
-    border-radius: 50%;
-    padding: 5px;
-}
-
-li {
-    padding: 5px;
-}
-
-.gra {
-    float: left;
-    text-align: center;
-    padding: 3px;
-}
-
-input {
-    margin: 10px;
-    color: Indigo;
-}
-=== КОНЕЦ ФАЙЛА: styl.css ===
-
-======================================================================
-
-=== НАЧАЛО ФАЙЛА: gry.php ===
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Gry komputerowe</title>
-    <link rel="stylesheet" href="styl.css">
-</head>
-<body>
-    <?php
-    $polaczenie = mysqli_connect("localhost", "root", "", "gry");
-
-    // Skrypt 4
-    if (!empty($_POST['nazwa'])) {
-        $nazwa = $_POST['nazwa'];
-        $opis = $_POST['opis'];
-        $cena = $_POST['cena'];
-        $zdjecie = $_POST['zdjecie'];
-        $zapytanie4 = "INSERT INTO gry (nazwa, opis, punkty, cena, zdjecie) VALUES ('$nazwa', '$opis', 0, '$cena', '$zdjecie');";
-        mysqli_query($polaczenie, $zapytanie4);
-    }
-    ?>
-
-    <header>
-        <h1>Ranking gier komputerowych</h1>
-    </header>
-
-    <aside id="lewy">
-        <h3>Top 5 gier w tym miesiącu</h3>
-        <ul>
-            <?php
-            // Skrypt 1
-            $zapytanie3 = "SELECT nazwa, punkty FROM gry ORDER BY punkty DESC LIMIT 5;";
-            $wynik1 = mysqli_query($polaczenie, $zapytanie3);
-            while ($wiersz1 = mysqli_fetch_array($wynik1)) {
-                echo "<li>" . $wiersz1['nazwa'] . " <span class='punkty'>" . $wiersz1['punkty'] . "</span></li>";
-            }
-            ?>
-        </ul>
-        <h3>Nasz sklep</h3>
-        <a href="http://sklep.gry.pl">Tu kupisz gry</a>
-        <h3>Stronę wykonał</h3>
-        <p>00000000000</p>
-    </aside>
-
-    <main id="srodkowy">
-        <?php
-        // Skrypt 2
-        $zapytanie1 = "SELECT id, nazwa, zdjecie FROM gry;";
-        $wynik2 = mysqli_query($polaczenie, $zapytanie1);
-        while ($wiersz2 = mysqli_fetch_array($wynik2)) {
-            echo "<div class='gra'>";
-            echo "<img src='" . $wiersz2['zdjecie'] . "' alt='" . $wiersz2['nazwa'] . "' title='" . $wiersz2['id'] . "'>";
-            echo "<p>" . $wiersz2['nazwa'] . "</p>";
-            echo "</div>";
+    // Zadanie 4:
+    const opcjeSzkoly = document.getElementsByName("typSzkoly");
+    for (let i = 0; i < opcjeSzkoly.length; i++) {
+        if (opcjeSzkoly[i].value === "technikum") {
+            opcjeSzkoly[i].checked = true;
+        } else {
+            opcjeSzkoly[i].checked = false;
         }
-        ?>
-    </main>
+    }
 
-    <aside id="prawy">
-        <h3>Dodaj nową grę</h3>
-        <form method="post" action="gry.php">
-            <label for="nazwa">nazwa</label><br>
-            <input type="text" name="nazwa" id="nazwa"><br>
-            <label for="opis">opis</label><br>
-            <input type="text" name="opis" id="opis"><br>
-            <label for="cena">cena</label><br>
-            <input type="text" name="cena" id="cena"><br>
-            <label for="zdjecie">zdjęcie</label><br>
-            <input type="text" name="zdjecie" id="zdjecie"><br>
-            <input type="submit" value="DODAJ">
-        </form>
-    </aside>
+    // Zadanie 5:
+    const pierwszaWiadomosc = document.querySelector(".wiadomosc");
+    pierwszaWiadomosc.textContent = "Pierwsza wiadomość została zmieniona";
+    pierwszaWiadomosc.style.color = "red";
 
-    <footer>
-        <form method="post" action="gry.php">
-            <input type="text" name="id">
-            <input type="submit" value="Pokaż opis">
-        </form>
-        <?php
-        // Skrypt 3
-        if (!empty($_POST['id'])) {
-            $id = $_POST['id'];
-            $zapytanie2 = "SELECT nazwa, LEFT(opis, 100) AS krotki_opis, punkty, cena FROM gry WHERE id = $id;";
-            $wynik3 = mysqli_query($polaczenie, $zapytanie2);
-            if ($wiersz3 = mysqli_fetch_array($wynik3)) {
-                echo "<h2>" . $wiersz3['nazwa'] . ", " . $wiersz3['punkty'] . " punktów, " . $wiersz3['cena'] . " zł</h2>";
-                echo "<p>" . $wiersz3['krotki_opis'] . "</p>";
-            }
-        }
+    // Zadanie 6:
+    const przedmioty = document.querySelectorAll("#przedmioty li");
+    przedmioty.forEach((element) => {
+        element.style.color = "purple";
+        element.style.fontWeight = "bold";
+    });
 
-        mysqli_close($polaczenie);
-        ?>
-    </footer>
-</body>
-</html>
-=== КОНЕЦ ФАЙЛА: gry.php ===
+    // Zadanie 7:
+    const tekstKarty = document.getElementById("tekstKarty");
+    const kartaRodzic = tekstKarty.closest(".card-rodzic");
+    kartaRodzic.style.backgroundColor = "lightyellow";
+    kartaRodzic.style.border = "3px solid orange";
 
-======================================================================
+    // Zadanie 8:
+    const dziecko = document.getElementById("dziecko");
+    const rodzic = dziecko.parentElement;
+    rodzic.style.backgroundColor = "lightpink";
+    rodzic.style.border = "2px dashed red";
 
-=== НАЧАЛО ФАЙЛА: przeglądarka.txt ===
-Google Chrome
-=== КОНЕЦ ФАЙЛА: przeglądarka.txt ===
+    // Zadanie 9:
+    const kontener = document.getElementById("kontener");
+    const dzieci = kontener.children;
+    for (let i = 0; i < dzieci.length; i++) {
+        dzieci[i].style.backgroundColor = "lightcyan";
+    }
+    const liczbaDzieci = document.getElementById("liczbaDzieci");
+    liczbaDzieci.textContent = "Liczba dzieci: " + dzieci.length;
 
-======================================================================
+    // Zadanie 10:
+    const menu = document.getElementById("menu");
+    const ostatniLink = menu.querySelector("a:last-child");
+    ostatniLink.textContent = "Napisz do nas";
+    ostatniLink.style.color = "green";
+    ostatniLink.style.fontWeight = "bold";
 
-=== НАЧАЛО ФАЙЛА: baza.sql ===
--- phpMyAdmin SQL Dump
--- version 5.1.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Czas generowania: 24 Sty 2022, 11:38
--- Wersja serwera: 10.4.21-MariaDB
--- Wersja PHP: 8.0.10
+    // Zadanie 11:
+    const listaUczniow = document.getElementById("listaUczniow");
+    const uczniowie = listaUczniow.querySelectorAll("li");
+    uczniowie.forEach((uczen) => {
+        uczen.style.color = "blue";
+        uczen.textContent = "Uczeń: " + uczen.textContent;
+    });
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Baza danych: `gry`
---
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `gry`
---
-
-CREATE TABLE `gry` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `nazwa` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `opis` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `punkty` int(10) UNSIGNED DEFAULT NULL,
-  `cena` float DEFAULT NULL,
-  `zdjecie` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Zrzut danych tabeli `gry`
---
-
-INSERT INTO `gry` (`id`, `nazwa`, `opis`, `punkty`, `cena`, `zdjecie`) VALUES
-(1, 'Czarodziejka', 'Rozgrywająca się w otwartym świecie przygoda. Jesteś czarodziejką Vestą i musisz zdobyć jedyny w swoim rodzaju diament, który pozwoli zrównoważyć siły w otaczającym Cię świecie', 45, 100, 'Czarodziejka.jpg'),
-(2, 'Kalipso', 'Kroniki Kalipso opowiadają historię wyspy IO, na której od niepamiętnych czasów ścierają się ze sobą dwa gatunki pradawnego świata: Eloje i Morloki. Jesteś rycerzem, który szuka pradawnej kroniki zawierającej przepis na utrzymanie pokoju na wyspie\r\n', 125, 76, 'kalipso.jpg'),
-(3, 'Katedra', 'W opuszczonej katedrze aniołowie i demony walczą o dusze ludzi na ziemi', 56, 50, 'katedra.jpg'),
-(4, 'Krokodyl', 'Rzeka zapomnienia kryje niebezpieczeństwa, które czekają na śmiałków przeprawiających się w poszukiwaniu nowych terenów na obozowiska', 34, 33, 'krokodyl.jpg'),
-(5, 'Księżniczka Persji', 'Wojownicza księżniczka Persji musi uniknąć konfliktów zbrojnych zagrażających jej podwładnym', 293, 100, 'Persja.jpg'),
-(6, 'Mag', 'W pradawnym świecie magowie władają państwami. Ci potężni czarodzieje nie znają litości dla swoich ludów, aż ... W odległej krainie rodzi się dziecko, które nie tylko zdradza umiejętności czarowania, ale też wkrótce zbuntuje się przeciwko hegemoni Magów i samo doprowadzi do zjednoczenia narodów i pokoju w pradawnym Świecie. Wpierw jednak musi stoczyć wojnę z Magami', 357, 150, 'Mag.jpg'),
-(7, 'Nieznany Ląd', 'Prosta gra przygodowa dla najmłodszych, którzy mogą się wcielić w niepokonanego kapitana Prixa podróżującego przez kosmos w poszukiwaniu nieznanego lądu', 96, 50, 'NieznanyLad.jpg'),
-(8, 'Wyprawa Na Księżyc', 'Misja Apollo musi tym razem wykonać lot na księżyc aby zmierzyć się z obcymi, którzy opanowali srebrny glob i planują inwazję na ziemię', 103, 79, 'WyprawaNaKsiezyc.jpg');
-
---
--- Indeksy dla zrzutów tabel
---
-
---
--- Indeksy dla tabeli `gry`
---
-ALTER TABLE `gry`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT dla zrzuconych tabel
---
-
---
--- AUTO_INCREMENT dla tabeli `gry`
---
-ALTER TABLE `gry`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-=== КОНЕЦ ФАЙЛА: baza.sql ===
-
-======================================================================
-
-=== НАЧАЛО ФАЙЛА: zamczysko.jpg ===
-[Бинарный файл изображения: zamczysko.jpg, масштабирован пропорционально до ширины 550 px -> 550x309 px]
-=== КОНЕЦ ФАЙЛА: zamczysko.jpg ===
+    // Zadanie 12:
+    const podsumowanie = document.getElementById("podsumowanie");
+    const punkty = podsumowanie.querySelectorAll(".punkt");
+    punkty.forEach((punkt) => {
+        punkt.style.backgroundColor = "lightgreen";
+    });
+    const pierwszyPunkt = podsumowanie.querySelector(".punkt");
+    pierwszyPunkt.textContent = "Pierwszy punkt został ukończony";
+    const status = document.getElementById("status");
+    status.textContent = "Zadanie wykonane!";
